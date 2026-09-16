@@ -76,8 +76,8 @@
 
 .placa__cuerdas polyline {
   fill: none;
-  stroke: #2b2219;
-  stroke-width: 4;
+  stroke: #8a7358;
+  stroke-width: 3.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -85,7 +85,7 @@
 /* ============ RÓTULO COLGADO ============ */
 .rotulo {
   position: absolute;
-  top: calc(-1% - 64px);
+  top: -22px;
   left: 50%;
   translate: -50% 0;
   width: clamp(290px, 30vw, 440px);
@@ -1258,7 +1258,7 @@
   /* rótulo estrecho y centrado; las placas cuelgan a los lados sin tocarlo */
   .rotulo {
     width: 50vw;
-    top: calc(2% - 44px);
+    top: -12px;
   }
   .rotulo__tabla {
     margin-top: 44px;
