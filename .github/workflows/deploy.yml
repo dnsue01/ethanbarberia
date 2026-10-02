@@ -1,0 +1,85 @@
+name: Deploy a Vercel
+
+# main -> producción. Pull requests -> vista previa.
+# Necesita tres secretos en GitHub (Settings > Secrets and variables > Actions):
+#   VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# Las variables de la web (SHOPIFY_TIENDA, NEXT_PUBLIC_SHOPIFY_PAGO, NEXT_PUBLIC_SITIO)
+# se configuran en el proyecto de Vercel: `vercel pull` las trae al build.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Comprobar tipos
+        run: npx tsc --noEmit
+
+      - name: Comprobar secretos de Vercel
+        run: |
+          for v in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!v}" ]; then echo "::error::Falta el secreto $v"; exit 1; fi
+          done
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Elegir entorno
+        id: entorno
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "nombre=preview" >> "$GITHUB_OUTPUT"
+            echo "flag=" >> "$GITHUB_OUTPUT"
+          else
+            echo "nombre=production" >> "$GITHUB_OUTPUT"
+            echo "flag=--prod" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Traer la configuración de Vercel
+        run: npx vercel@latest pull --yes --environment=${{ steps.entorno.outputs.nombre }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build
+        run: npx vercel@latest build ${{ steps.entorno.outputs.flag }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Desplegar
+        id: deploy
+        run: |
+          url=$(npx vercel@latest deploy --prebuilt ${{ steps.entorno.outputs.flag }} --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "### Desplegado: $url" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comentar la vista previa en la PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `Vista previa lista: ${{ steps.deploy.outputs.url }}`,
+            });
