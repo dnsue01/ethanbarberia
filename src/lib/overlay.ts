@@ -64,7 +64,7 @@ export function useOverlay<T extends HTMLElement>(onCerrar: () => void) {
       if (i >= 0) pila.splice(i, 1);
       // el elemento de origen puede haber desaparecido (la ficha se desmonta al
       // añadir y es ella quien abre la cesta): entonces el foco cae al body y se
-      // pierde el hilo, así que hay un refugio marcado en la escena
+      // pierde el hilo, así que hay un refugio marcado en la cabecera
       if (previo?.isConnected) previo.focus({ preventScroll: true });
       else document.querySelector<HTMLElement>("[data-foco-refugio]")?.focus({ preventScroll: true });
     };
