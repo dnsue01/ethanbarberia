@@ -59,8 +59,8 @@ function Panel({ demo, pago }: Props) {
         {lineas.length === 0 ? (
           <div className="cesta__vacia">
             <p>La bolsa está vacía.</p>
-            <p>Abre las tarifas de la pizarra y elige camiseta.</p>
-            <button onClick={cerrar}>Volver a la barbería</button>
+            <p>Echa un ojo a las camisetas, la pomada o el aceite.</p>
+            <button onClick={cerrar}>Seguir mirando</button>
           </div>
         ) : (
           <ul className="cesta__lineas">

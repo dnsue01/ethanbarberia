@@ -2,7 +2,7 @@
 
 > la perilla me pone perrilla y el flequillo me pone perrillo
 
-Tienda headless de Shopify hecha con Next.js 16. Toda la web es una sola escena: una barbería con el rótulo y dos placas colgados de cuerdas con física, una pizarra de tarifas que abre la carta, la ficha de cada producto y la bolsa lateral. Misma arquitectura que Prendas Payas.
+Tienda headless de Shopify hecha con Next.js 16. Web de scroll con identidad propia: portada con el espejo de latón, la tarifa de la silla (agenda llena), camisetas, pomada y aceite, la casa y el pie. La ficha de producto y la bolsa lateral se abren encima sin cambiar de página.
 
 ## Arrancar
 
@@ -25,12 +25,11 @@ Sin `SHOPIFY_TIENDA` la web enseña un catálogo de muestra con fotos de stock (
 
 ## Estructura
 
-- `src/components/Escena.tsx`: la barbería, rótulo, placas, pizarra y loader (poste de barbero).
-- `src/components/Carta.tsx`: carta con camisetas, pomada y aceite y servicios con la agenda llena.
+- `src/components/Sitio.tsx`: cabecera, portada, cinta, tarifa de la silla, tienda, la casa y pie.
+- `src/components/sitio.css`: todos los estilos (papel, tinta, rojo de poste y latón).
 - `src/components/ProductModal.tsx`: ficha con tallas y fotos delante/detrás.
 - `src/components/CartDrawer.tsx`: bolsa y pago.
 - `src/lib/shopify.ts`: catálogo, demo y URL de pago.
-- `src/lib/cuerdas.ts`: física Verlet de los carteles.
 - `src/lib/cart.tsx`: estado de la bolsa (se guarda en localStorage).
 
 Fotos de stock: Pexels (licencia libre).

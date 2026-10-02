@@ -1,7 +1,7 @@
 import { getCatalogo } from "@/lib/shopify";
-import Escena from "@/components/Escena";
+import Sitio from "@/components/Sitio";
 
 export default async function Home() {
   const catalogo = await getCatalogo();
-  return <Escena catalogo={catalogo} />;
+  return <Sitio catalogo={catalogo} />;
 }

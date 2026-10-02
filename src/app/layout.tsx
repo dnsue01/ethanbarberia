@@ -1,12 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Oswald, Rye, Caveat_Brush, Geist } from "next/font/google";
+import { Fraunces, Barlow_Condensed, Instrument_Sans } from "next/font/google";
 import { CartProvider } from "@/lib/cart";
 import "./globals.css";
 
-const oswald = Oswald({ subsets: ["latin"], variable: "--f-display" });
-const rye = Rye({ weight: "400", subsets: ["latin"], variable: "--f-rotulo" });
-const tiza = Caveat_Brush({ weight: "400", subsets: ["latin"], variable: "--f-tiza" });
-const geist = Geist({ subsets: ["latin"], variable: "--f-body" });
+/* Serif con carácter para los titulares, condensada para etiquetas y precios,
+   y una sans limpia para leer. */
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--f-display",
+});
+const barlow = Barlow_Condensed({
+  weight: ["500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--f-etiqueta",
+});
+const instrument = Instrument_Sans({ subsets: ["latin"], variable: "--f-body" });
 
 const FRASE = "La perilla me pone perrilla y el flequillo me pone perrillo.";
 
@@ -23,12 +32,12 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = { themeColor: "#0e0d0c" };
+export const viewport: Viewport = { themeColor: "#efe8da" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className={`${oswald.variable} ${rye.variable} ${tiza.variable} ${geist.variable}`}>
+      <body className={`${fraunces.variable} ${barlow.variable} ${instrument.variable}`}>
         <CartProvider>{children}</CartProvider>
       </body>
     </html>
