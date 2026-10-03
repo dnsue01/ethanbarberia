@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { HandbagSimple, ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
 import type { Catalogo, Producto } from "@/lib/shopify";
-import { euros, foto, fotoSet } from "@/lib/shopify";
+import { euros, foto, fotoSet, BASE } from "@/lib/shopify";
 import { useCesta } from "@/lib/cart";
 import ProductModal from "./ProductModal";
 import CartDrawer from "./CartDrawer";
@@ -199,8 +199,8 @@ function Portada() {
       >
         <div className="arco">
           <picture>
-            <source media="(max-width: 700px)" srcSet="/be-fondo-movil.webp" />
-            <img src="/be-fondo.webp" alt="Interior de la barbería: sillones de cuero, estantes y espejos con marco dorado" fetchPriority="high" />
+            <source media="(max-width: 700px)" srcSet={`${BASE}/be-fondo-movil.webp`} />
+            <img src={`${BASE}/be-fondo.webp`} alt="Interior de la barbería: sillones de cuero, estantes y espejos con marco dorado" fetchPriority="high" />
           </picture>
         </div>
         <svg className="sello-giro" viewBox="0 0 120 120" aria-hidden>
@@ -425,8 +425,8 @@ function Casa() {
     <section className="casa" id="casa" aria-labelledby="titulo-casa">
       <div className="casa__foto" aria-hidden>
         <picture>
-          <source media="(max-width: 700px)" srcSet="/be-fondo-movil.webp" />
-          <img src="/be-fondo.webp" alt="" loading="lazy" />
+          <source media="(max-width: 700px)" srcSet={`${BASE}/be-fondo-movil.webp`} />
+          <img src={`${BASE}/be-fondo.webp`} alt="" loading="lazy" />
         </picture>
       </div>
       <Aparece className="casa__texto">

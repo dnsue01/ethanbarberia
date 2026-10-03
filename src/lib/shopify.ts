@@ -145,8 +145,12 @@ export function urlCheckout(pago: string, lineas: { variantId: number; qty: numb
   return `${pago}/cart/${partes}`;
 }
 
+/** Prefijo de ruta cuando la web no cuelga de la raíz (vista previa en GitHub Pages). */
+export const BASE = process.env.NEXT_PUBLIC_BASE ?? "";
+
 /** Miniatura del CDN de Shopify al ancho pedido. Las fotos locales se dejan tal cual. */
 export function foto(src: string, ancho: number) {
+  if (src?.startsWith("/")) return BASE + src;
   if (!src || !src.includes("cdn.shopify.com")) return src;
   const [base, query] = src.split("?");
   const ext = base.lastIndexOf(".");
