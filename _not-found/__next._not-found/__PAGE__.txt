@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[22016,["/ethanbarberia/_next/static/chunks/0bz3gsb-ijjff.js","/ethanbarberia/_next/static/chunks/40y840rsppele.js","/ethanbarberia/_next/static/chunks/14mrh2-p_w84d.js"],""]
+3:I[97367,["/ethanbarberia/_next/static/chunks/0bz3gsb-ijjff.js","/ethanbarberia/_next/static/chunks/40y840rsppele.js","/ethanbarberia/_next/static/chunks/14mrh2-p_w84d.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","section",null,{"className":"bloque pagina vacio-pagina","children":[["$","h1",null,{"children":"Esta página no existe"}],["$","p",null,{"children":"Puede que el producto ya no esté o que el enlace esté mal escrito."}],["$","$L2",null,{"className":"boton","href":"/tienda","children":"Volver a la tienda"}]]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"qBE7h-6X9m0ZqUb7lsvKc"}
+5:null
