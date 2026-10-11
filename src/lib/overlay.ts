@@ -5,10 +5,9 @@ import { useEffect, useRef } from "react";
 const FOCUSABLE =
   'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
-/* Pila de paneles abiertos. La carta no se cierra al abrir una prenda, así que
-   puede haber carta + ficha + cesta a la vez, y todos escuchan el keydown del
-   mismo document: sin esta pila, un Escape los cerraba todos de golpe y
-   Shift+Tab saltaba al panel de debajo. Solo manda el último. */
+/* Pila de paneles abiertos. Si hay más de uno a la vez, todos escuchan el
+   keydown del mismo document: sin esta pila, un Escape los cerraba todos de
+   golpe y Shift+Tab saltaba al panel de debajo. Solo manda el último. */
 const pila: symbol[] = [];
 
 /* Todo panel superpuesto se comporta igual: Escape cierra, el foco entra
@@ -27,7 +26,12 @@ export function useOverlay<T extends HTMLElement>(onCerrar: () => void) {
     const previo = document.activeElement as HTMLElement | null;
     const nodo = ref.current;
 
-    const primero = nodo?.querySelector<HTMLElement>(FOCUSABLE);
+    const enfocables = () =>
+      Array.from(nodo?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []).filter(
+        // motion pone tabindex="0" también en botones desactivados: no cuentan
+        (el) => el.offsetParent !== null && !el.matches(":disabled")
+      );
+    const primero = enfocables()[0];
     (primero ?? nodo)?.focus({ preventScroll: true });
 
     const encima = () => pila[pila.length - 1] === yo;
@@ -41,9 +45,7 @@ export function useOverlay<T extends HTMLElement>(onCerrar: () => void) {
         return;
       }
       if (e.key !== "Tab" || !nodo) return;
-      const focos = Array.from(nodo.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-        (el) => el.offsetParent !== null
-      );
+      const focos = enfocables();
       if (focos.length === 0) return;
       const inicio = focos[0];
       const fin = focos[focos.length - 1];
@@ -60,11 +62,13 @@ export function useOverlay<T extends HTMLElement>(onCerrar: () => void) {
     document.addEventListener("keydown", tecla);
     return () => {
       document.removeEventListener("keydown", tecla);
+      const eraArriba = encima();
       const i = pila.indexOf(yo);
       if (i >= 0) pila.splice(i, 1);
-      // el elemento de origen puede haber desaparecido (la ficha se desmonta al
-      // añadir y es ella quien abre la cesta): entonces el foco cae al body y se
-      // pierde el hilo, así que hay un refugio marcado en la escena
+      // si otro panel se abrió encima (la bolsa tras añadir), el foco es suyo
+      if (!eraArriba) return;
+      // el elemento de origen puede haber desaparecido: entonces el foco cae al
+      // body y se pierde el hilo, así que hay un refugio marcado en la cabecera
       if (previo?.isConnected) previo.focus({ preventScroll: true });
       else document.querySelector<HTMLElement>("[data-foco-refugio]")?.focus({ preventScroll: true });
     };

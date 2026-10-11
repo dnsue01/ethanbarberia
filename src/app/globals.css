@@ -1,19 +1,13 @@
-/* La escena es siempre de noche con paneles de esmalte encima: un solo tema,
-   como un local de verdad. Un acento: rojo barbero. */
+/* Streetwear minimal: blanco, negro y tipografía grande. Sin adornos. */
 :root {
-  --negro: #0e0d0c;
-  --tinta: #171b20;
-  --tinta-suave: #3a4048;
-  --gris: #555b62; /* 6.3:1 sobre el esmalte */
-  --esmalte: #efeee9;
-  --esmalte-claro: #fbfaf7;
-  --borde: rgba(23, 27, 32, 0.16);
-  --rojo: #b32d24;
-  --rojo-hondo: #8f221b;
-  --rojo-tiza: #f07b6f; /* el mismo rojo, legible sobre la pizarra */
-  --verde: #1d3a2f;
-  --pizarra: #1c2320;
-  --tiza: #efefe8;
+  --fondo: #fff;
+  --tinta: #000;
+  --gris: #6f6f6f;
+  --gris-claro: #f1f1f1;
+  --linea: #dcdcdc;
+  --rojo: #d4231f;
+  --max: 1680px;
+  --pad: clamp(14px, 2.4vw, 32px);
 }
 
 * {
@@ -22,14 +16,19 @@
   padding: 0;
 }
 
-html,
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+  background: var(--fondo);
+}
+
 body {
-  height: 100%;
-  overflow: hidden; /* la barbería no scrollea: es una escena */
-  background: var(--negro);
-  color: var(--esmalte);
+  min-height: 100dvh;
+  background: var(--fondo);
+  color: var(--tinta);
   font-family: var(--f-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  line-height: 1.45;
 }
 
 button {
@@ -38,7 +37,10 @@ button {
   border: none;
   background: none;
   color: inherit;
+  border-radius: 0;
 }
+
+a { color: inherit; }
 
 img {
   max-width: 100%;
@@ -46,33 +48,33 @@ img {
 }
 
 ::selection {
-  background: var(--rojo);
-  color: var(--esmalte-claro);
+  background: var(--tinta);
+  color: var(--fondo);
 }
 
 :focus-visible {
-  outline: 3px solid var(--rojo-tiza);
+  outline: 2px solid var(--tinta);
   outline-offset: 3px;
-  border-radius: 4px;
 }
+
+.saltar {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 200;
+  padding: 10px 16px;
+  background: var(--tinta);
+  color: var(--fondo);
+}
+
+.saltar:focus { top: 12px; }
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
+    animation: none !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-.visualmente-oculto {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
 }

@@ -26,8 +26,13 @@ const seguridad = [
   },
 ];
 
-const nextConfig: NextConfig = {
-  headers: async () => [{ source: "/(.*)", headers: seguridad }],
-};
+/* Vista previa en GitHub Pages: export estático bajo /ethanbarberia.
+   Solo se activa con GITHUB_PAGES=true; Vercel y local siguen igual. */
+const pages = process.env.GITHUB_PAGES === "true";
+const base = pages ? "/ethanbarberia" : "";
+
+const nextConfig: NextConfig = pages
+  ? { output: "export", basePath: base, trailingSlash: true, env: { NEXT_PUBLIC_BASE: base } }
+  : { headers: async () => [{ source: "/(.*)", headers: seguridad }] };
 
 export default nextConfig;

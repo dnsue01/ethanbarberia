@@ -1,0 +1,113 @@
+/* Bolsa lateral. */
+
+.velo {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: stretch end;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.panel__cerrar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.panel__cerrar:hover { background: var(--tinta); color: var(--fondo); }
+
+.cesta {
+  display: flex;
+  flex-direction: column;
+  width: min(460px, 100%);
+  height: 100%;
+  background: var(--fondo);
+  color: var(--tinta);
+  outline: none;
+  scrollbar-width: thin;
+}
+
+.cesta__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--tinta);
+  touch-action: pan-y;
+}
+
+.cesta__cabecera h3 { font-weight: 800; font-size: 1.5rem; letter-spacing: -0.05em; text-transform: uppercase; }
+
+.cesta__vacia { display: grid; gap: 10px; justify-items: start; padding: 24px 20px; color: var(--gris); }
+
+.cesta__vacia button,
+.cesta__seguir {
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid var(--tinta);
+  color: var(--tinta);
+  font-family: var(--f-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cesta__vacia button:hover,
+.cesta__seguir:hover { background: var(--tinta); color: var(--fondo); }
+
+.cesta__lineas { flex: 1; list-style: none; overflow-y: auto; padding: 0 20px; }
+
+.cesta__lineas li {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--linea);
+  overflow: hidden;
+}
+
+.cesta__lineas img { width: 72px; height: 90px; object-fit: cover; background: var(--gris-claro); }
+.cesta__lineas li > div:nth-child(2) { display: grid; gap: 4px; }
+.cesta__lineas b { font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: -0.01em; }
+.cesta__lineas li span { font-family: var(--f-mono), monospace; font-size: 0.7rem; text-transform: uppercase; color: var(--gris); }
+
+.cesta__qty { display: inline-flex; align-items: center; margin-top: 8px; border: 1px solid var(--linea); width: max-content; }
+.cesta__qty button { display: grid; place-items: center; width: 32px; height: 32px; }
+.cesta__qty button:hover { background: var(--tinta); color: var(--fondo); }
+.cesta__qty span { min-width: 28px; text-align: center; color: var(--tinta); font-variant-numeric: tabular-nums; }
+
+.cesta__precio { display: grid; justify-items: end; gap: 6px; }
+.cesta__precio em { font-style: normal; font-family: var(--f-mono), monospace; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.cesta__quitar { font-family: var(--f-mono), monospace; font-size: 0.68rem; text-transform: uppercase; text-decoration: underline; color: var(--gris); }
+.cesta__quitar:hover { color: var(--rojo); }
+
+.cesta__pie { display: grid; gap: 10px; padding: 18px 20px 22px; border-top: 1px solid var(--tinta); }
+.cesta__total { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--f-mono), monospace; font-size: 0.72rem; text-transform: uppercase; }
+.cesta__total b { font-family: var(--f-body), sans-serif; font-weight: 800; font-size: 1.6rem; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+
+.cesta__pagar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  background: var(--tinta);
+  color: var(--fondo);
+  border: 1px solid var(--tinta);
+  font-family: var(--f-mono), monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cesta__pagar:hover:not(:disabled) { background: var(--fondo); color: var(--tinta); }
+.cesta__pagar:disabled { background: var(--gris-claro); border-color: var(--gris-claro); color: #9a9a9a; cursor: not-allowed; }
+.cesta__pie small { color: var(--gris); font-size: 0.78rem; }

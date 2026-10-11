@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useDragControls } from "motion/react";
-import { X, Minus, Plus, ArrowRight } from "@phosphor-icons/react";
+import { X, Minus, Plus, ArrowRight, Lock } from "@phosphor-icons/react";
 import { useCesta } from "@/lib/cart";
 import { euros, urlCheckout, foto, fotoSet } from "@/lib/shopify";
 import { useOverlay } from "@/lib/overlay";
+import Perilla from "./Perilla";
 
 type Props = { demo: boolean; pago: string };
 
@@ -19,10 +21,16 @@ function Panel({ demo, pago }: Props) {
   const { lineas, cerrar, cantidad, total, unidades } = useCesta();
   const panelRef = useOverlay<HTMLElement>(cerrar);
   const arrastre = useDragControls();
+  const volverRef = useRef<HTMLButtonElement>(null);
+  const vacia = lineas.length === 0;
+  // al quitar la última línea el foco caería al body: va al botón de volver
+  useEffect(() => {
+    if (vacia && panelRef.current?.contains(document.activeElement) === false) volverRef.current?.focus();
+  }, [vacia, panelRef]);
 
   return (
     <motion.div
-      className="velo velo--cesta"
+      className="velo"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -58,9 +66,10 @@ function Panel({ demo, pago }: Props) {
 
         {lineas.length === 0 ? (
           <div className="cesta__vacia">
+            <Perilla size={44} />
             <p>La bolsa está vacía.</p>
-            <p>Abre las tarifas de la pizarra y elige camiseta.</p>
-            <button onClick={cerrar}>Volver a la barbería</button>
+            <p>Elige una camiseta en la tienda.</p>
+            <button ref={volverRef} onClick={cerrar}>Volver a la tienda</button>
           </div>
         ) : (
           <ul className="cesta__lineas">
@@ -85,7 +94,7 @@ function Panel({ demo, pago }: Props) {
                       >
                         <Minus size={14} weight="bold" />
                       </button>
-                      <span aria-live="polite" aria-label={`${l.qty} unidades`}>
+                      <span>
                         {l.qty}
                       </span>
                       <button
@@ -114,7 +123,7 @@ function Panel({ demo, pago }: Props) {
 
         {lineas.length > 0 && (
           <footer className="cesta__pie">
-            <div className="cesta__total">
+            <div className="cesta__total" aria-live="polite">
               <span>
                 Total, {unidades} {unidades === 1 ? "artículo" : "artículos"}
               </span>
@@ -123,9 +132,9 @@ function Panel({ demo, pago }: Props) {
             {demo ? (
               <>
                 <button className="cesta__pagar" disabled>
-                  Pagar
+                  <Lock size={18} weight="bold" aria-hidden /> Pagar
                 </button>
-                <small>Tienda en modo muestra: el pago se activa al conectar Shopify.</small>
+                <small>Tienda de muestra: el pago se activa al conectar Shopify.</small>
               </>
             ) : (
               <>
@@ -136,9 +145,12 @@ function Panel({ demo, pago }: Props) {
                 >
                   Pagar <ArrowRight size={18} weight="bold" aria-hidden />
                 </motion.a>
-                <small>Pago seguro con Shopify. IVA incluido.</small>
+                <small>Pago seguro con Shopify. Envío calculado al pagar.</small>
               </>
             )}
+            <button className="cesta__seguir" onClick={cerrar}>
+              Seguir comprando
+            </button>
           </footer>
         )}
       </motion.aside>

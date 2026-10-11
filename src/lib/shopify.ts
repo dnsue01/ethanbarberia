@@ -24,8 +24,7 @@ export type Producto = {
 };
 
 export type Catalogo = {
-  camisetas: Producto[];
-  cuidado: Producto[];
+  productos: Producto[];
   demo: boolean;
   pago: string;
 };
@@ -64,18 +63,16 @@ async function coleccion(handle: string): Promise<Producto[] | null> {
 const tallas = (base: number, agotadas: string[] = []): Variante[] =>
   ["S", "M", "L", "XL"].map((t, i) => ({ id: base + i, title: t, available: !agotadas.includes(t) }));
 
-const unica = (id: number): Variante[] => [{ id, title: "Default Title", available: true }];
-
 /* Catálogo de demostración: se sustituye solo en cuanto hay tienda. */
 const DEMO: Omit<Catalogo, "demo" | "pago"> = {
-  camisetas: [
+  productos: [
     {
       id: 1,
       title: "Me Pone Perrilla",
       handle: "me-pone-perrilla",
       body_html: "Camiseta negra de algodón grueso. Para los de la perilla bien perfilada.",
       price: "24.90",
-      images: ["/stock/perrilla-front.webp", "/stock/perrilla-back.webp"],
+      images: ["/stock/perrilla-front.webp"],
       variants: tallas(101, ["XL"]),
     },
     {
@@ -84,14 +81,14 @@ const DEMO: Omit<Catalogo, "demo" | "pago"> = {
       handle: "me-pone-perrillo",
       body_html: "Para los del flequillo. Corte recto, algodón grueso y cuello que no se da de sí.",
       price: "24.90",
-      images: ["/stock/perrillo-front.webp", "/stock/perrillo-back.webp"],
+      images: ["/stock/perrillo-front.webp"],
       variants: tallas(201),
     },
     {
       id: 3,
-      title: "Degradado Blanco",
-      handle: "degradado-blanco",
-      body_html: "La básica blanca de la casa. Sale limpia como un degradado recién hecho.",
+      title: "Básica Blanca",
+      handle: "basica-blanca",
+      body_html: "La básica blanca de la casa. Sale limpia como un cuello recién repasado.",
       price: "22.00",
       images: ["/stock/blanca-front.webp"],
       variants: tallas(301, ["S"]),
@@ -106,33 +103,13 @@ const DEMO: Omit<Catalogo, "demo" | "pago"> = {
       variants: tallas(401),
     },
   ],
-  cuidado: [
-    {
-      id: 5,
-      title: "Pomada Mate",
-      handle: "pomada-mate",
-      body_html: "Fijación media y acabado sin brillo. La que usa Ethan para peinar al terminar.",
-      price: "14.50",
-      images: ["/stock/balsamo.webp"],
-      variants: unica(501),
-    },
-    {
-      id: 6,
-      title: "Aceite de Barba",
-      handle: "aceite-de-barba",
-      body_html: "Suaviza la barba y la perilla. Tres gotas por la mañana y listo.",
-      price: "16.00",
-      images: ["/stock/aceite.webp"],
-      variants: unica(601),
-    },
-  ],
 };
 
 export async function getCatalogo(): Promise<Catalogo> {
-  const [camisetas, cuidado] = await Promise.all([coleccion("camisetas"), coleccion("cuidado")]);
-  // sin tienda, o tienda que no responde y sin nada publicado: catálogo demo
-  if (!camisetas && !cuidado) return { ...DEMO, demo: true, pago: "" };
-  return { camisetas: camisetas ?? [], cuidado: cuidado ?? [], demo: false, pago: PAGO };
+  const productos = await coleccion("camisetas");
+  // sin tienda, o tienda que no responde: catálogo demo
+  if (!productos) return { ...DEMO, demo: true, pago: "" };
+  return { productos, demo: false, pago: PAGO };
 }
 
 export function euros(precio: string | number) {
@@ -145,8 +122,12 @@ export function urlCheckout(pago: string, lineas: { variantId: number; qty: numb
   return `${pago}/cart/${partes}`;
 }
 
-/** Miniatura del CDN de Shopify al ancho pedido. Las fotos locales se dejan tal cual. */
+/** Prefijo de ruta cuando la web no cuelga de la raíz (vista previa en GitHub Pages). */
+export const BASE = process.env.NEXT_PUBLIC_BASE ?? "";
+
+/** Miniatura del CDN de Shopify al ancho pedido. Las fotos locales solo llevan el prefijo. */
 export function foto(src: string, ancho: number) {
+  if (src?.startsWith("/")) return BASE + src;
   if (!src || !src.includes("cdn.shopify.com")) return src;
   const [base, query] = src.split("?");
   const ext = base.lastIndexOf(".");
@@ -159,4 +140,8 @@ export function foto(src: string, ancho: number) {
 export function fotoSet(src: string, ancho: number) {
   if (!src || !src.includes("cdn.shopify.com")) return undefined;
   return `${foto(src, ancho)} 1x, ${foto(src, ancho * 2)} 2x`;
+}
+
+export function sinHtml(html: string) {
+  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }

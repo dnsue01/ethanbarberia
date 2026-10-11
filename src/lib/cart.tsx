@@ -49,7 +49,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...l, qty: 1 }];
     });
-    setAbierto(true);
   };
 
   const cantidad = (variantId: number, qty: number) =>
