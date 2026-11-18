@@ -1,5 +1,9 @@
 # Ethan Barbershop
 
+Tienda online de camisetas con estética de barbería. La web presenta prendas destacadas y permite explorar el catálogo, abrir fichas de producto y consultar la bolsa.
+
+[Visitar la web](https://dnsue01.github.io/ethanbarberia/)
+
 > la perilla me pone perrilla y el flequillo me pone perrillo
 
 Tienda de camisetas headless de Shopify hecha con Next.js 16. Web de ecommerce convencional (inicio, listado con búsqueda y orden, ficha de producto y bolsa lateral) con estética de barbería.
